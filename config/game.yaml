@@ -1,3 +1,65 @@
 game:
   server:
     port: 6060
+  building:
+    palace:
+      name: Palace
+      levels:
+        -
+          cost:
+            gold: 100
+            wood: 100
+            stone: 0
+            time: 30
+        -
+          cost:
+            gold: 500
+            wood: 500
+            stone: 100
+            time: 120
+    barracks:
+      name: Barracks
+      levels:
+        -
+          cost:
+            gold: 50
+            wood: 200
+            time: 300
+    library:
+      name: Library
+      levels:
+        -
+          cost:
+            gold: 1000
+            wood: 1000
+            time: 7200
+        -
+          cost:
+            gold: 10000
+            wood: 1000
+            stone: 1000
+            time: 43200 # 12 * 3600
+  unit:
+    footman:
+      name: Footman
+      levels:
+        -
+          hp: 10
+          damage: 3
+          range: 1
+          speed: 2
+          cost:
+            gold: 10
+            time: 10
+    archer:
+      name: Archer
+      levels:
+        -
+          hp: 6
+          damage: 2
+          range: 5
+          speed: 3
+          cost:
+            gold: 5
+            wood: 5
+            time: 10

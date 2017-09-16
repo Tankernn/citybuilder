@@ -1,6 +1,6 @@
 from SimpleWebSocketServer import SimpleWebSocketServer, WebSocket
 import json
-from citybuilder import messagehandler
+from citybuilder.messagehandler import MessageHandler
 from citybuilder.player import Player
 
 connections = {}
@@ -9,6 +9,7 @@ players = {}
 class MainServerSocket(WebSocket):
 
     def handleMessage(self):
+        global config
         try:
             print("Message received: " + self.data)
             message = json.loads(self.data)
@@ -17,21 +18,24 @@ class MainServerSocket(WebSocket):
                     if message['username'] in players and players[message['username']].check_password(message['password']):
                         connections[message['username']] = self
                         self.player = players[message['username']]
+                        self.player.login(self)
                         print(message['username'] + " logged in")
                     else:
-                        self.send_json({result: 1})
+                        self.send_json({'result': 1})
                 elif message['type'] == "register":
                     if message['username'] not in players:
                         connections[message['username']] = self
-                        players[message['username']] = Player(message['username'], message['password'])
+                        players[message['username']] = Player(message['username'], message['password'], config)
                         self.player = players[message['username']]
+                        self.player.login(self)
                     else:
-                        self.send_json({result: 2})
+                        self.send_json({'result': 2})
                 else:
-                    self.send_json({result: 3})
+                    self.send_json({'result': 3})
             else:
                 messagehandler.handle_message(self, self.player, message)
         except Exception as e:
+            print("Exception in message handling:")
             print(e)
 
     def send_json(self, data):
@@ -43,6 +47,10 @@ class MainServerSocket(WebSocket):
     def handleClose(self):
         print(self.address, 'closed')
 
-def run_server(config):
+def run_server(configuration):
+    global messagehandler
+    global config
+    config = configuration
+    messagehandler = MessageHandler(config)
     server = SimpleWebSocketServer('', config['server']['port'], MainServerSocket)
     server.serveforever()
