@@ -2,6 +2,7 @@ from SimpleWebSocketServer import SimpleWebSocketServer, WebSocket
 import json
 from citybuilder.messagehandler import MessageHandler
 from citybuilder.player import Player
+from citybuilder import core
 
 connections = {}
 players = {}
@@ -9,7 +10,6 @@ players = {}
 class MainServerSocket(WebSocket):
 
     def handleMessage(self):
-        global config
         try:
             print("Message received: " + self.data)
             message = json.loads(self.data)
@@ -25,7 +25,7 @@ class MainServerSocket(WebSocket):
                 elif message['type'] == "register":
                     if message['username'] not in players:
                         connections[message['username']] = self
-                        players[message['username']] = Player(message['username'], message['password'], config)
+                        players[message['username']] = Player(message['username'], message['password'])
                         self.player = players[message['username']]
                         self.player.login(self)
                     else:
@@ -47,10 +47,8 @@ class MainServerSocket(WebSocket):
     def handleClose(self):
         print(self.address, 'closed')
 
-def run_server(configuration):
+def run_server():
     global messagehandler
-    global config
-    config = configuration
-    messagehandler = MessageHandler(config)
-    server = SimpleWebSocketServer('', config['server']['port'], MainServerSocket)
+    messagehandler = MessageHandler(core.config)
+    server = SimpleWebSocketServer('', core.config['server']['port'], MainServerSocket)
     server.serveforever()

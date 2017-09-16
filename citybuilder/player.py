@@ -1,6 +1,7 @@
 from passlib.hash import pbkdf2_sha256
 import time
 import json
+from citybuilder import core
 
 
 class Unit:
@@ -26,11 +27,11 @@ class Job:
 
 
 class Player:
-    def __init__(self, username, password, config):
+    def __init__(self, username, password):
         self.username = username
         self.set_password(password)
         self.jobs = list()
-        self.buildings = { key: 0 for key in config['building'] }
+        self.buildings = { key: 0 for key in core.config['building'] }
         self.units = list()
         self.resources = {
             'gold': 100,
@@ -54,11 +55,11 @@ class Player:
     def add_job(self, product):
         self.jobs.append(Job(self, product))
 
-    def update(self, config, tick_length):
+    def update(self, tick_length):
         self.jobs = [job for job in self.jobs if not job.check_finish()]
         # Resource generation
         for building in self.buildings.keys():
-            spec = config['building'][building]
+            spec = core.config['building'][building]
             if 'production' in spec:
                 self.resources[spec['production']] += spec['levels'][self.buildings[building] - 1]['rate'] * tick_length
         
