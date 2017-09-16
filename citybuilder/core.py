@@ -6,7 +6,7 @@ import time
 def main_loop():
     for player in list(server.players.values()):
         player.update()
-    time.sleep(100)
+    time.sleep(1)
 
 if __name__ == '__main__':
     config = yaml.load(open("config/game.yaml"))['game']
