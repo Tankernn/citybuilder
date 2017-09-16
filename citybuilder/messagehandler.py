@@ -61,6 +61,5 @@ class MessageHandler:
                 result = {'result': 0}
             result['context'] = message
             connection.send_json(result)
-            player.update()
         else:
              connection.send_json({'result': 404})

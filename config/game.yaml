@@ -25,6 +25,16 @@ game:
             gold: 50
             wood: 200
             time: 300
+    goldmine:
+      name: Gold Mine
+      production: gold
+      levels:
+        -
+          rate: 1 # Resources / second
+          cost:
+            gold: 20
+            wood: 100
+            time: 10
     library:
       name: Library
       levels:

@@ -54,8 +54,14 @@ class Player:
     def add_job(self, product):
         self.jobs.append(Job(self, product))
 
-    def update(self):
+    def update(self, config, tick_length):
         self.jobs = [job for job in self.jobs if not job.check_finish()]
+        # Resource generation
+        for building in self.buildings.keys():
+            spec = config['building'][building]
+            if 'production' in spec:
+                self.resources[spec['production']] += spec['levels'][self.buildings[building] - 1]['rate'] * tick_length
+        
         self.ws.send_json({
             'username': self.username,
             'jobs': [{ 'product': job.product, 'finish_time': job.finish_time } for job in self.jobs],
