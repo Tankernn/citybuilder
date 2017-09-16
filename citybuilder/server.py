@@ -43,6 +43,7 @@ class MainServerSocket(WebSocket):
 
     def handleConnected(self):
         print(self.address, 'connected')
+        self.send_json(core.config)
 
     def handleClose(self):
         print(self.address, 'closed')
