@@ -1,4 +1,4 @@
-import toml
+import yaml
 import _thread
 from . import server
 import time
@@ -9,7 +9,7 @@ def main_loop():
     time.sleep(100)
 
 if __name__ == '__main__':
-    config = toml.load("config/core.toml")
+    config = yaml.load(open("config/game.yaml"))['game']
     def run(*args):
         server.run_server(config)
         print("Websocket thread terminated.")
