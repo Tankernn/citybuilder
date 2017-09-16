@@ -1,6 +1,17 @@
 game:
   server:
     port: 6060
+  general:
+    resources:
+      - gold
+      - wood
+      - stone
+    storage: # Free storage
+      gold: 100
+      wood: 100
+    start: # Starting resources
+      gold: 100
+      wood: 100
   building:
     palace:
       name: Palace
@@ -34,6 +45,15 @@ game:
           cost:
             gold: 20
             wood: 100
+            time: 10
+    vault:
+      name: vault
+      storage: gold
+      levels:
+        -
+          capacity: 1000
+          cost:
+            wood: 10
             time: 10
     library:
       name: Library

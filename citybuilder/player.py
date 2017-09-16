@@ -33,11 +33,7 @@ class Player:
         self.jobs = list()
         self.buildings = { key: 0 for key in core.config['building'] }
         self.units = list()
-        self.resources = {
-            'gold': 100,
-            'wood': 100,
-            'stone': 0,
-        }
+        self.resources = { resource: core.config['general']['start'].get(resource, 0) for resource in core.config['general']['resources'] }
         self.research = {
             'footman': 1,
             'archer': 0,
@@ -55,19 +51,29 @@ class Player:
     def add_job(self, product):
         self.jobs.append(Job(self, product))
 
+    def get_storage_space(self, resource):
+        space = core.config['general']['storage'].get(resource, 0)
+        for building in self.buildings.keys():
+            spec = core.config['building'][building]
+            if 'storage' in spec and self.buildings[building] > 0:
+                space += spec['levels'][self.buildings[building] - 1]['capacity']
+        return space
+
     def update(self, tick_length):
         self.jobs = [job for job in self.jobs if not job.check_finish()]
         # Resource generation
         for building in self.buildings.keys():
             spec = core.config['building'][building]
-            if 'production' in spec:
+            if 'production' in spec and self.buildings[building] > 0:
                 self.resources[spec['production']] += spec['levels'][self.buildings[building] - 1]['rate'] * tick_length
-        
+                self.resources[spec['production']] = min(self.get_storage_space(spec['production']), self.resources[spec['production']])
+
         self.ws.send_json({
             'username': self.username,
             'jobs': [{ 'product': job.product, 'finish_time': job.finish_time } for job in self.jobs],
             'buildings': self.buildings,
             'units': [unit.__dict__ for unit in self.units],
             'resources': self.resources,
+            'resources_max': { key: self.get_storage_space(key) for key in self.resources.keys() },
             'research': self.research,
         })
