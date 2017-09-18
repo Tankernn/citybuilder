@@ -5,8 +5,8 @@ from citybuilder import core
 
 
 class Unit:
-    def __init__(self, spec, level):
-        self.spec = spec
+    def __init__(self, key, level):
+        self.type = key
         self.level = level
 
 
@@ -21,7 +21,7 @@ class Job:
             if self.product['type'] == "building":
                 self.player.buildings[self.product['name']] += 1
             elif self.product['type'] == "unit":
-                self.player.units.append(Unit(self.product['spec'], self.product['level']))
+                self.player.units.append(Unit(self.product['name'], self.product['level']))
             return True
         return False
 
