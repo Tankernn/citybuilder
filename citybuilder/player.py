@@ -32,7 +32,7 @@ class Player:
         self.set_password(password)
         self.jobs = list()
         self.buildings = { key: 0 for key in core.config['building'] }
-        self.units = list()
+        self.units = [ Unit(unit['type'], unit['level']) for unit in core.config['general']['start']['units'] ]
         self.resources = { resource: core.config['general']['start'].get(resource, 0) for resource in core.config['general']['resources'] }
         self.research = {
             'footman': 1,

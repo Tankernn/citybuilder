@@ -12,6 +12,13 @@ game:
     start: # Starting resources
       gold: 100
       wood: 100
+      units:
+        -
+          type: peasant
+          level: 1
+        -
+          type: peasant
+          level: 1
   building:
     palace:
       name: Palace
@@ -70,6 +77,17 @@ game:
             stone: 1000
             time: 43200 # 12 * 3600
   unit:
+    peasant:
+      name: Peasant
+      levels:
+        -
+          hp: 1
+          damage: 1
+          range: 1
+          speed: 1
+          cost:
+            gold: 100
+            time: 1
     footman:
       name: Footman
       levels:
