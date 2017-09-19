@@ -2,6 +2,7 @@ from passlib.hash import pbkdf2_sha256
 import time
 import json
 from citybuilder import core
+from random import randrange
 
 
 class Unit:
@@ -22,6 +23,13 @@ class Job:
                 self.player.buildings[self.product['name']] += 1
             elif self.product['type'] == "unit":
                 self.player.units.append(Unit(self.product['name'], self.product['level']))
+            elif self.product['type'] == "mission":
+                mission = self.product['mission']
+                if mission['type'] == "gather":
+                    for resource, amount in mission['rewards']['resources'].items():
+                        self.player.add_resource(resource, randrange(int(amount * 0.9), int(amount * 1.1)))
+                    for unit in self.product['units']:
+                        self.player.units.append(unit)
             return True
         return False
 
@@ -38,6 +46,7 @@ class Player:
             'footman': 1,
             'archer': 0,
         }
+        self.missions = list()
 
     def login(self, ws):
         self.ws = ws
@@ -64,6 +73,10 @@ class Player:
         self.resources[resource] = min(self.get_storage_space(resource), self.resources[resource])
 
     def update(self, tick_length):
+        while len(self.missions) < self.buildings['palace'] + 1:
+            random_index = randrange(0, len(core.config['missions']))
+            self.missions.append(core.config['missions'][random_index])
+
         self.jobs = [job for job in self.jobs if not job.check_finish()]
         # Resource generation
         for building in self.buildings.keys():
@@ -79,4 +92,5 @@ class Player:
             'resources': self.resources,
             'resources_max': { key: self.get_storage_space(key) for key in self.resources.keys() },
             'research': self.research,
+            'missions': self.missions,
         })

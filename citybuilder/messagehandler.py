@@ -7,6 +7,7 @@ class MessageHandler:
         self.handlers = {
             "build": self.build,
             "train": self.train,
+            "mission": self.mission,
         }
         self.config = config
 
@@ -52,6 +53,22 @@ class MessageHandler:
             'level': message['level'],
         })
 
+    def mission(self, player, message):
+        mission = player.missions[message['index']]
+        if not self.resource_check(player, mission['cost']):
+            return {
+                'result': 1
+            }
+        units = list()
+        for index in sorted(message['units'], reverse=True):
+            units.append(player.units.pop(index))
+
+        player.add_job({
+            'type': "mission",
+            'time': mission['cost']['time'],
+            'mission': mission,
+            'units': units,
+        })
 
     def handle_message(self, connection, player, message):
         handler = self.handlers[message['type']]
