@@ -7,6 +7,9 @@ from citybuilder import core
 connections = {}
 players = {}
 
+def json_default(o):
+    return o.__dict__
+
 class MainServerSocket(WebSocket):
 
     def handleMessage(self):
@@ -39,7 +42,7 @@ class MainServerSocket(WebSocket):
             print(e)
 
     def send_json(self, data):
-        self.sendMessage(json.dumps(data))
+        self.sendMessage(json.dumps(data, default=json_default))
 
     def handleConnected(self):
         print(self.address, 'connected')

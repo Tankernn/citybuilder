@@ -75,7 +75,7 @@ class Player:
             'username': self.username,
             'jobs': [{ 'product': job.product, 'finish_time': job.finish_time } for job in self.jobs],
             'buildings': self.buildings,
-            'units': [unit.__dict__ for unit in self.units],
+            'units': self.units,
             'resources': self.resources,
             'resources_max': { key: self.get_storage_space(key) for key in self.resources.keys() },
             'research': self.research,
