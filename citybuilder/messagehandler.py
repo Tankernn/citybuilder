@@ -11,20 +11,11 @@ class MessageHandler:
         }
         self.config = config
 
-    def resource_check(self, player, cost):
-        cost = { k: cost[k] for k in cost.keys() if k != "time" }
-        for resource, required in cost.items():
-            if player.resources[resource] < required:
-                return False
-        for resource, required in cost.items():
-            player.resources[resource] -= required
-        return True
-
     def build(self, player, message):
         spec = self.config['building'][message['name']]
         level_index = player.buildings[message['name']]
         cost = spec['levels'][level_index]['cost']
-        if not self.resource_check(player, cost):
+        if not player.resource_check(cost):
             return {
                 'result': 1
             }
@@ -42,7 +33,7 @@ class MessageHandler:
             }
         level_index = message['level'] - 1
         cost = spec['levels'][level_index]['cost']
-        if not self.resource_check(player, cost):
+        if not player.resource_check(cost):
             return {
                 'result': 1
             }
@@ -55,7 +46,7 @@ class MessageHandler:
 
     def mission(self, player, message):
         mission = player.missions[message['index']]
-        if not self.resource_check(player, mission['cost']):
+        if not player.resource_check(mission['cost']):
             return {
                 'result': 1
             }

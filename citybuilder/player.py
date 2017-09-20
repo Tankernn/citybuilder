@@ -72,6 +72,17 @@ class Player:
         self.resources[resource] += amount
         self.resources[resource] = min(self.get_storage_space(resource), self.resources[resource])
 
+    def resource_check(self, cost):
+        """Checks if the resources are available,
+        and takes them if that is the case."""
+        cost = { k: cost[k] for k in cost.keys() if k != "time" }
+        for resource, required in cost.items():
+            if self.resources[resource] < required:
+                return False
+        for resource, required in cost.items():
+            self.resources[resource] -= required
+        return True
+
     def update(self, tick_length):
         while len(self.missions) < self.buildings['palace'] + 1:
             random_index = randrange(0, len(core.config['missions']))
