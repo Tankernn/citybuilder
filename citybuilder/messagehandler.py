@@ -8,6 +8,7 @@ class MessageHandler:
             "build": self.build,
             "train": self.train,
             "mission": self.mission,
+            "research": self.research,
         }
         self.config = config
 
@@ -46,6 +47,17 @@ class MessageHandler:
             'mission': mission,
             'units': units,
         }, {}, mission['cost'])
+
+    def research(self, player, message):
+        spec = self.config['research'][message['name']]
+        level_index = player.research.get(message['name'], 0)
+        requirements = spec['levels'][level_index]['requirements']
+        cost = spec['levels'][level_index]['cost']
+        return player.add_job({
+            'type': "research",
+            'time': cost['time'],
+            'name': message['name'],
+        }, requirements, cost)
 
     def handle_message(self, connection, player, message):
         handler = self.handlers[message['type']]

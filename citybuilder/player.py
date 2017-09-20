@@ -21,6 +21,8 @@ class Job:
         if time.time() > self.finish_time or core.config['debug']:
             if self.product['type'] == "building":
                 self.player.buildings[self.product['name']] += 1
+            elif self.product['type'] == "research":
+                self.player.research[self.product['name']] += 1
             elif self.product['type'] == "unit":
                 self.player.units.append(Unit(self.product['name'], self.product['level']))
             elif self.product['type'] == "mission":
@@ -42,10 +44,7 @@ class Player:
         self.buildings = { key: 0 for key in core.config['building'] }
         self.units = [ Unit(unit['type'], unit['level']) for unit in core.config['general']['start']['units'] ]
         self.resources = { resource: core.config['general']['start'].get(resource, 0) for resource in core.config['general']['resources'] }
-        self.research = {
-            'footman': 1,
-            'archer': 0,
-        }
+        self.research = { key: 0 for key in core.config['research'] }
         self.missions = list()
 
     def login(self, ws):

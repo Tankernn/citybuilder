@@ -125,6 +125,19 @@ game:
           requirements:
             buildings:
               barracks: 1
+            research:
+              archery: 1
+  research:
+    archery:
+      name: Archery
+      levels:
+        -
+          cost:
+            time: 10
+            gold: 100
+          requirements:
+            buildings:
+              library: 1
   missions:
     -
       name: Got wood?
