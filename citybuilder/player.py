@@ -57,7 +57,15 @@ class Player:
     def check_password(self, password):
         return pbkdf2_sha256.verify(password, self.password)
 
-    def add_job(self, product):
+    def add_job(self, product, requirements, cost):
+        if not self.check_requirements(requirements):
+            return {
+                'result': 2
+            }
+        if not self.resource_check(cost):
+            return {
+                'result': 1
+            }
         self.jobs.append(Job(self, product))
 
     def get_storage_space(self, resource):
@@ -71,6 +79,17 @@ class Player:
     def add_resource(self, resource, amount):
         self.resources[resource] += amount
         self.resources[resource] = min(self.get_storage_space(resource), self.resources[resource])
+
+    def check_requirements(self, requirements):
+        if 'buildings' in requirements:
+            for building, level in requirements['buildings'].items():
+                if self.buildings[building] < level:
+                    return False
+        if 'research' in requirements:
+            for research, level in requirements['research'].items():
+                if self.research[research] < level:
+                    return False
+        return True
 
     def resource_check(self, cost):
         """Checks if the resources are available,

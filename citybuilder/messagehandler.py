@@ -14,52 +14,38 @@ class MessageHandler:
     def build(self, player, message):
         spec = self.config['building'][message['name']]
         level_index = player.buildings[message['name']]
+        requirements = spec['levels'][level_index]['requirements']
         cost = spec['levels'][level_index]['cost']
-        if not player.resource_check(cost):
-            return {
-                'result': 1
-            }
-        player.add_job({
+        return player.add_job({
             'type': "building",
             'time': cost['time'],
             'name': message['name'],
-        })
+        }, requirements, cost)
 
     def train(self, player, message):
         spec = self.config['unit'][message['name']]
-        if message['level'] > player.research[message['name']]:
-            return {
-                'result': 2
-            }
         level_index = message['level'] - 1
+        requirements = spec['levels'][level_index]['requirements']
         cost = spec['levels'][level_index]['cost']
-        if not player.resource_check(cost):
-            return {
-                'result': 1
-            }
-        player.add_job({
+        return player.add_job({
             'type': "unit",
             'time': cost['time'],
             'name': message['name'],
             'level': message['level'],
-        })
+        }, requirements, cost)
 
     def mission(self, player, message):
         mission = player.missions[message['index']]
-        if not player.resource_check(mission['cost']):
-            return {
-                'result': 1
-            }
         units = list()
         for index in sorted(message['units'], reverse=True):
             units.append(player.units.pop(index))
 
-        player.add_job({
+        return player.add_job({
             'type': "mission",
             'time': mission['cost']['time'],
             'mission': mission,
             'units': units,
-        })
+        }, {}, mission['cost'])
 
     def handle_message(self, connection, player, message):
         handler = self.handlers[message['type']]

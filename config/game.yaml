@@ -28,12 +28,14 @@ game:
             wood: 100
             stone: 0
             time: 30
+          requirements: {}
         -
           cost:
             gold: 500
             wood: 500
             stone: 100
             time: 120
+          requirements: {}
     barracks:
       name: Barracks
       levels:
@@ -42,6 +44,7 @@ game:
             gold: 50
             wood: 200
             time: 300
+          requirements: {}
     goldmine:
       name: Gold Mine
       production: gold
@@ -52,6 +55,7 @@ game:
             gold: 20
             wood: 100
             time: 10
+          requirements: {}
     vault:
       name: vault
       storage: gold
@@ -61,6 +65,7 @@ game:
           cost:
             wood: 10
             time: 10
+          requirements: {}
     library:
       name: Library
       levels:
@@ -69,12 +74,14 @@ game:
             gold: 1000
             wood: 1000
             time: 7200
+          requirements: {}
         -
           cost:
             gold: 10000
             wood: 1000
             stone: 1000
             time: 43200 # 12 * 3600
+          requirements: {}
   unit:
     peasant:
       name: Peasant
@@ -87,6 +94,7 @@ game:
           cost:
             gold: 100
             time: 1
+          requirements: {}
     footman:
       name: Footman
       levels:
@@ -98,6 +106,9 @@ game:
           cost:
             gold: 10
             time: 10
+          requirements:
+            buildings:
+              barracks: 1
     archer:
       name: Archer
       levels:
@@ -110,6 +121,9 @@ game:
             gold: 5
             wood: 5
             time: 10
+          requirements:
+            buildings:
+              barracks: 1
   missions:
     -
       name: Got wood?
@@ -121,4 +135,4 @@ game:
       rewards:
         resources:
           wood: 200
-      requirements: []
+      requirements: {}
