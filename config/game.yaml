@@ -8,10 +8,10 @@ game:
       - wood
       - stone
     storage: # Free storage
-      gold: 100
-      wood: 100
+      gold: 1000
+      wood: 1000
     start: # Starting resources
-      gold: 100
+      gold: 1000
       units:
         -
           type: peasant
