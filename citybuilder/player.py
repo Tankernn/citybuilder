@@ -18,7 +18,7 @@ class Job:
         self.finish_time = time.time() + product['time']
 
     def check_finish(self):
-        if time.time() > self.finish_time:
+        if time.time() > self.finish_time or core.config['debug']:
             if self.product['type'] == "building":
                 self.player.buildings[self.product['name']] += 1
             elif self.product['type'] == "unit":
