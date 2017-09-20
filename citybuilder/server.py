@@ -1,5 +1,6 @@
 from SimpleWebSocketServer import SimpleWebSocketServer, WebSocket
 import json
+import traceback
 from citybuilder.messagehandler import MessageHandler
 from citybuilder.player import Player
 from citybuilder import core
@@ -39,7 +40,7 @@ class MainServerSocket(WebSocket):
                 messagehandler.handle_message(self, self.player, message)
         except Exception as e:
             print("Exception in message handling:")
-            print(e)
+            traceback.print_exc()
 
     def send_json(self, data):
         self.sendMessage(json.dumps(data, default=json_default))
