@@ -57,6 +57,10 @@ class Player:
         return pbkdf2_sha256.verify(password, self.password)
 
     def add_job(self, product, requirements, cost):
+        if product['type'] in ("building", "research"):
+            for job in self.jobs:
+                if job.product['name'] == product['name']:
+                    return 3
         if not self.check_requirements(requirements):
             return 2
         if not self.resource_check(cost):
