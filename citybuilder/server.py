@@ -24,6 +24,7 @@ class MainServerSocket(WebSocket):
                         self.player = players[message['username']]
                         self.player.login(self)
                         print(message['username'] + " logged in")
+                        self.send_json({'result': 0})
                     else:
                         self.send_json({'result': 1})
                 elif message['type'] == "register":
@@ -32,6 +33,7 @@ class MainServerSocket(WebSocket):
                         players[message['username']] = Player(message['username'], message['password'])
                         self.player = players[message['username']]
                         self.player.login(self)
+                        self.send_json({'result': 0})
                     else:
                         self.send_json({'result': 2})
                 else:
