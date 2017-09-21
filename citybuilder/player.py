@@ -58,14 +58,11 @@ class Player:
 
     def add_job(self, product, requirements, cost):
         if not self.check_requirements(requirements):
-            return {
-                'result': 2
-            }
+            return 2
         if not self.resource_check(cost):
-            return {
-                'result': 1
-            }
+            return 1
         self.jobs.append(Job(self, product))
+        return 0
 
     def get_storage_space(self, resource):
         space = core.config['general']['storage'].get(resource, 0)

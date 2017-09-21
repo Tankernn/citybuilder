@@ -65,7 +65,11 @@ class MessageHandler:
             result = handler(player, message)
             if result is None:
                 result = {'result': 0}
+            elif isinstance(result, int):
+                result = {'result': result}
             result['context'] = message
+            if result['result'] != 0:
+                print("Message handler returned error code {}".format(result['result']))
             connection.send_json(result)
         else:
              connection.send_json({'result': 404})
