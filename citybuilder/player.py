@@ -103,8 +103,9 @@ class Player:
 
     def update(self, tick_length):
         while len(self.missions) < self.buildings['palace'] + 1:
-            random_index = randrange(0, len(core.config['missions']))
-            self.missions.append(core.config['missions'][random_index])
+            missions_available = [mission for mission in core.config['missions'] if self.check_requirements(mission['requirements'])]
+            random_index = randrange(0, len(missions_available))
+            self.missions.append(missions_available[random_index])
 
         self.jobs = [job for job in self.jobs if not job.check_finish()]
         # Resource generation
