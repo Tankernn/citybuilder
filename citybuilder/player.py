@@ -101,6 +101,14 @@ class Player:
             self.resources[resource] -= required
         return True
 
+    def get_production(self, resource):
+        production = 0
+        for building, level in self.buildings.items():
+            spec = core.config['building'][building]
+            if 'production' in spec and spec['production'] == resource and level > 0:
+                production += spec['levels'][self.buildings[building] - 1]['rate']
+        return production
+
     def update(self, tick_length):
         while len(self.missions) < self.buildings['palace'] + 1:
             missions_available = [mission for mission in core.config['missions'] if self.check_requirements(mission['requirements'])]
@@ -109,10 +117,8 @@ class Player:
 
         self.jobs = [job for job in self.jobs if not job.check_finish()]
         # Resource generation
-        for building in self.buildings.keys():
-            spec = core.config['building'][building]
-            if 'production' in spec and self.buildings[building] > 0:
-                self.add_resource(spec['production'], spec['levels'][self.buildings[building] - 1]['rate'] * tick_length)
+        for resource in self.resources.keys():
+            self.add_resource(resource, self.get_production(resource) * tick_length)
 
         self.ws.send_json({
             'username': self.username,
@@ -120,6 +126,7 @@ class Player:
             'buildings': self.buildings,
             'units': self.units,
             'resources': self.resources,
+            'resources_production': {resource: self.get_production(resource) for resource in self.resources.keys()},
             'resources_max': { key: self.get_storage_space(key) for key in self.resources.keys() },
             'research': self.research,
             'missions': self.missions,
