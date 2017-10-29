@@ -3,6 +3,7 @@ game:
   server:
     port: 6060
   general:
+    mapsize: 1000.0
     resources:
       - gold
       - wood
@@ -11,7 +12,8 @@ game:
       gold: 1000
       wood: 1000
     start: # Starting resources
-      gold: 1000
+      resources:
+        gold: 1000
       units:
         -
           type: peasant

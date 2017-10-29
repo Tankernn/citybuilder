@@ -13,14 +13,16 @@ class MessageHandler:
         self.config = config
 
     def build(self, player, message):
+        city = player.cities[message['city_index']]
         spec = self.config['building'][message['name']]
-        level_index = player.buildings[message['name']]
+        level_index = city.buildings[message['name']]
         requirements = spec['levels'][level_index]['requirements']
         cost = spec['levels'][level_index]['cost']
         return player.add_job({
             'type': "building",
             'time': cost['time'],
             'name': message['name'],
+            'city': message['city_index'],
         }, requirements, cost)
 
     def train(self, player, message):
@@ -33,19 +35,22 @@ class MessageHandler:
             'time': cost['time'],
             'name': message['name'],
             'level': message['level'],
+            'city': message['city_index'],
         }, requirements, cost)
 
     def mission(self, player, message):
-        mission = player.missions[message['index']]
+        city = player.cities[message['city_index']]
+        mission = city.missions[message['index']]
         units = list()
         for index in sorted(message['units'], reverse=True):
-            units.append(player.units.pop(index))
+            units.append(city.units.pop(index))
 
         return player.add_job({
             'type': "mission",
             'time': mission['cost']['time'],
             'mission': mission,
             'units': units,
+            'city': message['city_index'],
         }, {}, mission['cost'])
 
     def research(self, player, message):
